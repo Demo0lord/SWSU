@@ -1,4 +1,4 @@
-import { Phone, Mail, MapPin, BookOpen, GraduationCap, ClipboardList, FileText, Users, Home, Users as Users2, Beaker, Building2, Utensils, Dumbbell } from 'lucide-react';
+import { Phone, Mail, MapPin, BookOpen, GraduationCap, ClipboardList, FileText, Users, Home, Users as Users2, Beaker, Building2, Utensils, Dumbbell, Calendar, Clock, User as UserIcon, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 
 function App() {
@@ -53,7 +53,139 @@ function App() {
     ]
   };
 
+  const schedule = [
+    { day: 'Понедельник', lessons: [
+      { time: '09:00-10:30', subject: 'Математический анализ', teacher: 'Проф. Петров И.В.', room: 'Аудитория 205', type: 'Лекция' },
+      { time: '10:45-12:15', subject: 'Программирование', teacher: 'Доц. Сидоров А.Н.', room: 'Корпус В, каб. 102', type: 'Практикум' },
+      { time: '13:00-14:30', subject: 'Физика', teacher: 'Проф. Иванов Д.С.', room: 'Аудитория 307', type: 'Лекция' },
+    ]},
+    { day: 'Вторник', lessons: [
+      { time: '09:00-10:30', subject: 'Английский язык', teacher: 'Доц. Морозова Е.П.', room: 'Аудитория 115', type: 'Семинар' },
+      { time: '10:45-12:15', subject: 'Математический анализ', teacher: 'Проф. Петров И.В.', room: 'Корпус А, каб. 203', type: 'Семинар' },
+      { time: '14:00-15:30', subject: 'История', teacher: 'Доц. Волков М.П.', room: 'Аудитория 201', type: 'Лекция' },
+    ]},
+    { day: 'Среда', lessons: [
+      { time: '09:00-10:30', subject: 'Химия', teacher: 'Проф. Федоров В.И.', room: 'Лаборатория 5', type: 'Лабораторная' },
+      { time: '11:00-12:30', subject: 'Программирование', teacher: 'Доц. Сидоров А.Н.', room: 'Корпус В, каб. 102', type: 'Лекция' },
+    ]},
+    { day: 'Четверг', lessons: [
+      { time: '09:00-10:30', subject: 'Философия', teacher: 'Доц. Кузнецов О.Л.', room: 'Аудитория 104', type: 'Лекция' },
+      { time: '10:45-12:15', subject: 'Физика', teacher: 'Проф. Иванов Д.С.', room: 'Лаборатория 3', type: 'Лабораторная' },
+      { time: '13:00-14:30', subject: 'Английский язык', teacher: 'Доц. Морозова Е.П.', room: 'Аудитория 115', type: 'Практикум' },
+    ]},
+    { day: 'Пятница', lessons: [
+      { time: '09:00-10:30', subject: 'Дискретная математика', teacher: 'Доц. Орлов Н.В.', room: 'Аудитория 206', type: 'Лекция' },
+      { time: '10:45-12:15', subject: 'Проектирование', teacher: 'Проф. Смирнов А.А.', room: 'Корпус В, каб. 104', type: 'Практикум' },
+    ]},
+  ];
+
+  const homework = [
+    { subject: 'Математический анализ', deadline: '2024-10-20', description: 'Решить задачи 1-15 из раздела 3.2 учебника', completed: false, daysLeft: 3 },
+    { subject: 'Программирование', deadline: '2024-10-22', description: 'Написать программу для обработки массива с использованием указателей', completed: false, daysLeft: 5 },
+    { subject: 'Английский язык', deadline: '2024-10-18', description: 'Переводить текст по теме "Технологии" (страницы 45-50)', completed: false, daysLeft: 1 },
+    { subject: 'Физика', deadline: '2024-10-25', description: 'Написать реферат на тему "Квантовая механика в современной физике"', completed: false, daysLeft: 8 },
+    { subject: 'История', deadline: '2024-10-19', description: 'Подготовить презентацию о исторических событиях XIX века', completed: true, daysLeft: 0 },
+  ];
+
+  const getLessonColor = (type: string) => {
+    switch(type) {
+      case 'Лекция': return 'bg-blue-100 border-l-blue-700';
+      case 'Практикум': return 'bg-green-100 border-l-green-700';
+      case 'Семинар': return 'bg-yellow-100 border-l-yellow-700';
+      case 'Лабораторная': return 'bg-purple-100 border-l-purple-700';
+      default: return 'bg-gray-100 border-l-gray-700';
+    }
+  };
+
   const renderPage = () => {
+    if (activePage === 'students') {
+      return (
+        <>
+          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border-t-4 border-blue-700">
+            <h2 className="text-3xl font-bold text-blue-950 mb-6 flex items-center gap-3">
+              <Calendar className="w-8 h-8 text-blue-700" />
+              Расписание занятий
+            </h2>
+            <div className="space-y-6">
+              {schedule.map((daySchedule, index) => (
+                <div key={index} className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 border-l-4 border-blue-700">
+                  <h3 className="font-bold text-xl text-blue-950 mb-4">{daySchedule.day}</h3>
+                  <div className="space-y-3">
+                    {daySchedule.lessons.map((lesson, lessonIndex) => (
+                      <div key={lessonIndex} className={`${getLessonColor(lesson.type)} p-4 rounded-lg border-l-4 ml-0`}>
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                          <div>
+                            <h4 className="font-bold text-gray-900">{lesson.subject}</h4>
+                            <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-700">
+                              <div className="flex items-center gap-1">
+                                <Clock className="w-4 h-4" />
+                                {lesson.time}
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <UserIcon className="w-4 h-4" />
+                                {lesson.teacher}
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <MapPin className="w-4 h-4" />
+                                {lesson.room}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="bg-white px-3 py-1 rounded text-sm font-semibold text-gray-700 whitespace-nowrap">
+                            {lesson.type}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-xl p-8 border-t-4 border-blue-700">
+            <h2 className="text-3xl font-bold text-blue-950 mb-6 flex items-center gap-3">
+              <CheckCircle className="w-8 h-8 text-blue-700" />
+              Домашние задания
+            </h2>
+            <div className="space-y-4">
+              {homework.map((task, index) => (
+                <div key={index} className={`${task.completed ? 'bg-green-50 border-l-green-700' : 'bg-blue-50 border-l-blue-700'} p-6 rounded-lg border-l-4`}>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        {task.completed && <CheckCircle className="w-6 h-6 text-green-600" />}
+                        <h4 className={`font-bold text-lg ${task.completed ? 'text-green-900 line-through' : 'text-blue-950'}`}>
+                          {task.subject}
+                        </h4>
+                      </div>
+                      <p className="text-gray-700 mb-3">{task.description}</p>
+                      <div className="flex flex-wrap gap-4">
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <Calendar className="w-4 h-4" />
+                          Срок: {task.deadline}
+                        </div>
+                        {!task.completed && task.daysLeft > 0 && (
+                          <div className={`text-sm font-semibold ${task.daysLeft <= 2 ? 'text-red-600' : 'text-gray-600'}`}>
+                            Осталось: {task.daysLeft} дн.
+                          </div>
+                        )}
+                        {task.completed && (
+                          <div className="text-sm font-semibold text-green-600">
+                            Выполнено
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      );
+    }
+
     if (activePage === 'about') {
       return (
         <>
